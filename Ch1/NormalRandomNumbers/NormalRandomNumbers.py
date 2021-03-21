@@ -10,14 +10,42 @@ from matplotlib import rc
 from pylab import MaxNLocator
 import pandas as pd
 import datetime as dt
-import NISTplots as nist
+import sys
 
+
+sys.path.insert(1, '/NIST_Eng_Stat_HB//Modules')
+import NISTplots as nistplt
+import NISTtables as nisttbl
+
+
+#from /../../Modules import NISTplots as nist
+Variable = 'Random Numbers'
 #open the data file
 df = pd.read_csv('RANDN.DAT', skiprows=range(0,25),header=None,delim_whitespace=True)
+
 #convert the matrix of random numbers into 1 long list
-ds=pd.Series(df.values.ravel('F'))
-df = pd.DataFrame(ds,columns = ['Random Numbers'])
+temp = np.asarray(df.values)
+temp = np.reshape(temp,(1,500))
+#ds=pd.Series(df.values.ravel('F'))
+ds = pd.Series(temp[0])
+df = pd.DataFrame(ds,columns = [Variable])
+#print(df.head())
+
+
+
+#print common summary statistics
+nisttbl.SummaryStatsTable(df,Variable)
+
+#print data linear fit parameters
+nisttbl.LinearParametersTable(df,Variable)
 
 #create the four plot for the data
-nist.FourPlot(df,'Random Numbers')
+nistplt.FourPlot(df,'Random Numbers',(-10,10,50))
+
+#run a Bartlett's test for equal variance
+nisttbl.BartlettsTestTable(df)
+
+nistplt.AutoCorrelationPlot(df,21)
+
+
 
