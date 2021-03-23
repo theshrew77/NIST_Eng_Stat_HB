@@ -40,12 +40,16 @@ nisttbl.SummaryStatsTable(df,Variable)
 nisttbl.LinearParametersTable(df,Variable)
 
 #create the four plot for the data
-nistplt.FourPlot(df,'Random Numbers',(-10,10,50))
+#nistplt.FourPlot(df,'Random Numbers',(-10,10,50))
 
 #run a Bartlett's test for equal variance
 nisttbl.BartlettsTestTable(df)
 
-nistplt.AutoCorrelationPlot(df,21)
+#create an autocorrelation plot
+#nistplt.AutoCorrelationPlot(df,21)
+
+#run a runs tests for randomness
+nisttbl.RunsTestTable(df,Variable)
 
 
 

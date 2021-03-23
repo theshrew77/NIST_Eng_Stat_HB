@@ -53,9 +53,6 @@ def BartlettsTestTable(df):
     dfs = np.array_split(df,4)
     alpha = 0.05
     k = 4
-
-    #for i in range(len(dfs)):
-    #    print(dfs[i].head())
     
     T,P = stats.bartlett(
         dfs[0].values,
@@ -78,3 +75,25 @@ def BartlettsTestTable(df):
     print('\nBartlett\'s Test Table')
     print(tabulate(data))
  
+def RunsTestTable(df,Variable):
+    R = np.not_equal(np.diff(np.sign(df[Variable].values)),0)
+    R = R[R==True].size + 1
+    n1 = df[df[Variable] >=0].size
+    n2 = df[df[Variable] < 0].size
+    Rbar = 2*n1*n2 / (n1+n2) + 1
+    #sR = np.sqrt(2*n1*n2*(2*n1*n2 - n1 - n2) / ( (n1+n2)**2 * (n1+n2-1) ))
+    sR = ((2*n1*n2 - n1 - n2)) / ((n1+n2)**2 * (n1+n2-1) )
+    sR = sR * 2*n1*n2
+    sR = np.sqrt(sR)
+    Z = (R - Rbar) / sR 
+    alpha = 0.05
+    P = round(stats.norm.ppf(1-alpha/2),2)
+    
+    data = [
+        ['Test statistic: Z = ',Z],
+        ['Significance Level: ', alpha],
+        ['Critical value: ',P],
+        ['Critical Region: Reject H0 if |T| > ',P]
+    ]
+    print('\nRuns Test Table')
+    print(tabulate(data))
